@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class City extends Model
 {
@@ -15,8 +16,13 @@ class City extends Model
         'department',
     ];
 
-    public function employees()
+    public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function contactInformation(): HasMany
+    {
+        return $this->hasMany(ContactInformation::class);
     }
 } 

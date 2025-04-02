@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { 
-    PencilSquareIcon, 
-    TrashIcon,
-    UserPlusIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    PlusIcon
-} from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
@@ -75,36 +68,44 @@ export default function Index({ auth, cie10 }) {
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                         Descripción
                                                     </th>
-                                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Acciones
+                                                    <th className="relative px-6 py-3">
+                                                        <span className="sr-only">Acciones</span>
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
                                                 {cie10.data.map((item) => (
-                                                    <tr key={item.code}>
+                                                    <tr key={item.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {item.code}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                             {item.description}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                            <Link
+                                                                href={route('cie10.show', item.id)}
+                                                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-gray-700 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                                            >
+                                                                <EyeIcon className="h-4 w-4" />
+                                                            </Link>
+
                                                             {auth.user.permissions.includes('cie10.edit') && (
                                                                 <Link
-                                                                    href={route('cie10.edit', item.code)}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    href={route('cie10.edit', item.id)}
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-indigo-700 hover:text-indigo-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Editar
+                                                                    <PencilIcon className="h-4 w-4" />
                                                                 </Link>
                                                             )}
+
                                                             {auth.user.permissions.includes('cie10.delete') && (
                                                                 <button
-                                                                    onClick={() => handleDelete(item.code)}
+                                                                    onClick={() => handleDelete(item.id)}
                                                                     disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-red-700 hover:text-red-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Eliminar
+                                                                    <TrashIcon className="h-4 w-4" />
                                                                 </button>
                                                             )}
                                                         </td>

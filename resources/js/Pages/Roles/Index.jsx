@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
@@ -75,38 +75,37 @@ export default function Index({ auth, roles }) {
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
                                                 {roles.data.map((role) => (
-                                                    <tr key={role.id}>
+                                                    <tr key={role.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {role.name}
                                                         </td>
-                                                        <td className="px-6 py-4 text-sm text-gray-500">
-                                                            <div className="flex flex-wrap gap-1">
-                                                                {role.permissions.map((permission) => (
-                                                                    <span
-                                                                        key={permission.id}
-                                                                        className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20"
-                                                                    >
-                                                                        {permission.name}
-                                                                    </span>
-                                                                ))}
-                                                            </div>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                            {role.permissions.length} permisos
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                            <Link
+                                                                href={route('roles.show', role.id)}
+                                                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-gray-700 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                                            >
+                                                                <EyeIcon className="h-4 w-4" />
+                                                            </Link>
+
                                                             {auth.user.permissions.includes('roles.edit') && (
                                                                 <Link
                                                                     href={route('roles.edit', role.id)}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-indigo-700 hover:text-indigo-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Editar
+                                                                    <PencilIcon className="h-4 w-4" />
                                                                 </Link>
                                                             )}
+
                                                             {auth.user.permissions.includes('roles.delete') && (
                                                                 <button
                                                                     onClick={() => handleDelete(role.id)}
                                                                     disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-red-700 hover:text-red-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Eliminar
+                                                                    <TrashIcon className="h-4 w-4" />
                                                                 </button>
                                                             )}
                                                         </td>

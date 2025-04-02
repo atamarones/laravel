@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
-export default function Index({ auth, cities }) {
+export default function Index({ auth, cities, can }) {
     const [processing, setProcessing] = useState(false);
 
     const handleDelete = (id) => {
@@ -35,7 +35,7 @@ export default function Index({ auth, cities }) {
                                         placeholder="Buscar ciudades..."
                                     />
                                 </div>
-                                {auth.user.permissions.includes('cities.create') && (
+                                {can.create && (
                                     <div className="mt-4 sm:mt-0">
                                         <Link
                                             href={route('cities.create')}
@@ -75,7 +75,7 @@ export default function Index({ auth, cities }) {
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
                                                 {cities.data.map((city) => (
-                                                    <tr key={city.id}>
+                                                    <tr key={city.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {city.name}
                                                         </td>
@@ -83,23 +83,33 @@ export default function Index({ auth, cities }) {
                                                             {city.department}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            {auth.user.permissions.includes('cities.edit') && (
+                                                            <div className="flex items-center justify-end gap-4">
                                                                 <Link
-                                                                    href={route('cities.edit', city.id)}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    href={route('cities.show', city.id)}
+                                                                    className="text-gray-600 hover:text-gray-900"
                                                                 >
-                                                                    Editar
+                                                                    <EyeIcon className="h-5 w-5" />
                                                                 </Link>
-                                                            )}
-                                                            {auth.user.permissions.includes('cities.delete') && (
-                                                                <button
-                                                                    onClick={() => handleDelete(city.id)}
-                                                                    disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
-                                                                >
-                                                                    Eliminar
-                                                                </button>
-                                                            )}
+
+                                                                {can.edit && (
+                                                                    <Link
+                                                                        href={route('cities.edit', city.id)}
+                                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                                    >
+                                                                        <PencilIcon className="h-5 w-5" />
+                                                                    </Link>
+                                                                )}
+
+                                                                {can.delete && (
+                                                                    <button
+                                                                        onClick={() => handleDelete(city.id)}
+                                                                        disabled={processing}
+                                                                        className="text-red-600 hover:text-red-900"
+                                                                    >
+                                                                        <TrashIcon className="h-5 w-5" />
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}

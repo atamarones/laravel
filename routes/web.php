@@ -15,6 +15,7 @@ use App\Http\Controllers\CollaboratorTypeController;
 use App\Http\Controllers\Cie10Controller;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\AccidentController;
+use App\Http\Controllers\EmployeeController;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -72,6 +73,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(RoleOrPermissionMiddleware::using(['super-admin', 'absences.view']));
     Route::resource('accidents', AccidentController::class)
         ->middleware(RoleOrPermissionMiddleware::using(['super-admin', 'accidents.view']));
+
+    Route::resource('employees', EmployeeController::class);
 });
+
+Route::get('/documentation', function () {
+    return Inertia::render('Documentation');
+})->name('documentation');
 
 require __DIR__.'/auth.php';

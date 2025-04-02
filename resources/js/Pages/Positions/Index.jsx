@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { Button, IconButton } from '@material-tailwind/react';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
-export default function Index({ auth, positions }) {
+export default function Index({ auth, positions, can }) {
     const [processing, setProcessing] = useState(false);
 
     const handleDelete = (id) => {
@@ -37,7 +35,7 @@ export default function Index({ auth, positions }) {
                                         placeholder="Buscar cargos..."
                                     />
                                 </div>
-                                {auth.user.permissions.includes('positions.create') && (
+                                {can.create && (
                                     <div className="mt-4 sm:mt-0">
                                         <Link
                                             href={route('positions.create')}
@@ -74,28 +72,38 @@ export default function Index({ auth, positions }) {
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
                                                 {positions.data.map((position) => (
-                                                    <tr key={position.id}>
+                                                    <tr key={position.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {position.name}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            {auth.user.permissions.includes('positions.edit') && (
+                                                            <div className="flex items-center justify-end gap-4">
                                                                 <Link
-                                                                    href={route('positions.edit', { position: position.id })}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    href={route('positions.show', position.id)}
+                                                                    className="text-gray-600 hover:text-gray-900"
                                                                 >
-                                                                    Editar
+                                                                    <EyeIcon className="h-5 w-5" />
                                                                 </Link>
-                                                            )}
-                                                            {auth.user.permissions.includes('positions.delete') && (
-                                                                <button
-                                                                    onClick={() => handleDelete(position.id)}
-                                                                    disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
-                                                                >
-                                                                    Eliminar
-                                                                </button>
-                                                            )}
+
+                                                                {can.edit && (
+                                                                    <Link
+                                                                        href={route('positions.edit', position.id)}
+                                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                                    >
+                                                                        <PencilIcon className="h-5 w-5" />
+                                                                    </Link>
+                                                                )}
+
+                                                                {can.delete && (
+                                                                    <button
+                                                                        onClick={() => handleDelete(position.id)}
+                                                                        disabled={processing}
+                                                                        className="text-red-600 hover:text-red-900"
+                                                                    >
+                                                                        <TrashIcon className="h-5 w-5" />
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}

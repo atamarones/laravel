@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Login({ status, canResetPassword }) {
     const { t, language, changeLanguage } = useTranslation();
+    const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -31,33 +32,14 @@ export default function Login({ status, canResetPassword }) {
                 {/* Círculo de luz */}
                 <div className="absolute right-0 top-0 -z-10 h-[500px] w-[500px] rounded-full bg-primary-500/20 blur-[120px]"></div>
 
-                <div className="flex min-h-screen flex-col items-center pt-6 sm:justify-center sm:pt-0">
-                    <div className="relative mb-8 flex items-center gap-6">
-                        <Link href="/" className="text-2xl font-bold text-white">
-                            <svg className="h-12 w-auto" viewBox="0 0 24 24" fill="none">
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3ZM1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM13 10V7L18 12L13 17V14H9V10H13Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-                        </Link>
-                        {/* Selector de idioma */}
-                        <div className="relative">
-                            <select
-                                value={language}
-                                onChange={(e) => changeLanguage(e.target.value)}
-                                className="appearance-none rounded-lg bg-gray-800 pl-4 pr-10 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-                            >
-                                <option value="es">Español</option>
-                                <option value="en">English</option>
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                                <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </div>
+                <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+                    <div className="w-full max-w-md space-y-8">
+                        <div>
+                            <img
+                                className="mx-auto h-12 w-auto"
+                                src="/images/logo/logo.png"
+                                alt="Logo Empresa"
+                            />
                         </div>
                     </div>
 
@@ -86,15 +68,24 @@ export default function Login({ status, canResetPassword }) {
                                     {t('auth.password')}
                                 </label>
 
-                                <input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    value={data.password}
-                                    className="mt-1 block w-full rounded-lg border border-gray-600 bg-gray-700/50 px-3 py-2 text-white shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
-                                    autoComplete="current-password"
-                                    onChange={(e) => setData('password', e.target.value)}
-                                />
+                                <div className="relative mt-1">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={data.password}
+                                        className="block w-full rounded-lg border border-gray-600 bg-gray-700/50 px-3 py-2 pr-10 text-white shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
+                                        autoComplete="current-password"
+                                        onChange={(e) => setData('password', e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                                    >
+                                        👁️
+                                    </button>
+                                </div>
 
                                 {errors.password && <div className="mt-2 text-sm text-red-500">{errors.password}</div>}
                             </div>

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -32,23 +34,25 @@ class Employee extends Model
     ];
 
     protected $casts = [
-        'birth_date' => 'datetime',
-        'start_date' => 'datetime',
+        'birth_date' => 'date',
+        'start_date' => 'date',
         'end_date' => 'date',
+        'height' => 'decimal:2',
+        'weight' => 'decimal:2',
     ];
 
     // Relaciones
-    public function position()
+    public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
     }
 
-    public function collaboratorType()
+    public function collaboratorType(): BelongsTo
     {
         return $this->belongsTo(CollaboratorType::class);
     }
 
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
@@ -58,32 +62,32 @@ class Employee extends Model
         return $this->belongsTo(TerminationReason::class);
     }
 
-    public function gender()
+    public function gender(): BelongsTo
     {
         return $this->belongsTo(Gender::class);
     }
 
-    public function civilStatus()
+    public function civilStatus(): BelongsTo
     {
         return $this->belongsTo(CivilStatus::class);
     }
 
-    public function salary()
+    public function salary(): HasOne
     {
         return $this->hasOne(Salary::class);
     }
 
-    public function bankAccount()
+    public function bankAccount(): HasOne
     {
         return $this->hasOne(BankAccount::class);
     }
 
-    public function emergencyContact()
+    public function emergencyContact(): HasOne
     {
         return $this->hasOne(EmergencyContact::class);
     }
 
-    public function uniform()
+    public function uniform(): HasOne
     {
         return $this->hasOne(Uniform::class);
     }
@@ -93,13 +97,13 @@ class Employee extends Model
         return $this->hasMany(Observation::class);
     }
 
-    public function contactInformation()
+    public function contactInformation(): HasOne
     {
-        return $this->hasOne(EmployeeContactInformation::class);
+        return $this->hasOne(ContactInformation::class);
     }
 
-    public function socialSecurity()
+    public function socialSecurity(): HasOne
     {
-        return $this->hasOne(EmployeeSocialSecurity::class);
+        return $this->hasOne(SocialSecurity::class);
     }
 } 

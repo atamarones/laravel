@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
-export default function Index({ auth, bloodTypes }) {
+export default function Index({ auth, bloodTypes, can }) {
     const [processing, setProcessing] = useState(false);
 
     const handleDelete = (id) => {
@@ -35,7 +35,7 @@ export default function Index({ auth, bloodTypes }) {
                                         placeholder="Buscar tipos de sangre..."
                                     />
                                 </div>
-                                {auth.user.permissions.includes('blood-types.create') && (
+                                {can.create && (
                                     <div className="mt-4 sm:mt-0">
                                         <Link
                                             href={route('blood-types.create')}
@@ -71,27 +71,35 @@ export default function Index({ auth, bloodTypes }) {
                                                 </tr>
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
-                                                {bloodTypes.data.map((bloodType) => (
-                                                    <tr key={bloodType.id}>
+                                                {bloodTypes.data.map((type) => (
+                                                    <tr key={type.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {bloodType.name}
+                                                            {type.name}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            {auth.user.permissions.includes('blood-types.edit') && (
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                            <Link
+                                                                href={route('blood-types.show', type.id)}
+                                                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-gray-700 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                                            >
+                                                                <EyeIcon className="h-4 w-4" />
+                                                            </Link>
+
+                                                            {can.edit && (
                                                                 <Link
-                                                                    href={route('blood-types.edit', bloodType.id)}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    href={route('blood-types.edit', type.id)}
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-indigo-700 hover:text-indigo-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Editar
+                                                                    <PencilIcon className="h-4 w-4" />
                                                                 </Link>
                                                             )}
-                                                            {auth.user.permissions.includes('blood-types.delete') && (
+
+                                                            {can.delete && (
                                                                 <button
-                                                                    onClick={() => handleDelete(bloodType.id)}
+                                                                    onClick={() => handleDelete(type.id)}
                                                                     disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-red-700 hover:text-red-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Eliminar
+                                                                    <TrashIcon className="h-4 w-4" />
                                                                 </button>
                                                             )}
                                                         </td>

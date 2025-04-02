@@ -48,6 +48,8 @@ class EmployeeSeeder extends Seeder
                 'position_id' => $faker->randomElement($positionIds),
                 'collaborator_type_id' => $faker->randomElement($collaboratorTypeIds),
                 'city_id' => $faker->randomElement($cityIds),
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear información de contacto
@@ -56,6 +58,8 @@ class EmployeeSeeder extends Seeder
                 'address' => $faker->address,
                 'phone' => $faker->phoneNumber,
                 'email' => $faker->unique()->safeEmail,
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear información de seguridad social
@@ -66,46 +70,61 @@ class EmployeeSeeder extends Seeder
                 'arl' => $faker->company,
                 'compensation_fund' => $faker->company,
                 'blood_type_id' => $faker->randomElement($bloodTypeIds),
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear salario
             Salary::create([
                 'employee_id' => $employee->id,
-                'salary' => $faker->randomFloat(2, 1000000, 5000000),
-                'salary_exclusion' => $faker->optional()->randomFloat(2, 0, 1000000),
+                'salary' => $faker->numberBetween(1160000, 5000000), // Salario entre 1.160.000 y 5.000.000
+                'salary_exclusion' => $faker->optional(0.3)->numberBetween(100000, 500000), // 30% de probabilidad de tener exclusión
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear cuenta bancaria
             BankAccount::create([
                 'employee_id' => $employee->id,
-                'bank' => $faker->company,
-                'account_type' => $faker->randomElement(['Ahorro', 'Corriente']),
-                'account_number' => $faker->numerify('##########'),
+                'bank' => $faker->randomElement(['Bancolombia', 'Davivienda', 'BBVA', 'Banco de Bogotá', 'Banco de Occidente']),
+                'account_type' => $faker->randomElement(['Ahorros', 'Corriente']),
+                'account_number' => $faker->unique()->numerify('###########'),
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear contacto de emergencia
             EmergencyContact::create([
                 'employee_id' => $employee->id,
                 'contact_name' => $faker->name,
-                'relationship' => $faker->randomElement(['Padre', 'Madre', 'Hermano', 'Hermana', 'Cónyuge']),
+                'relationship' => $faker->randomElement(['Padre', 'Madre', 'Hermano/a', 'Esposo/a', 'Hijo/a']),
                 'contact_phone' => $faker->phoneNumber,
                 'contact_address' => $faker->address,
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
             // Crear uniforme
             Uniform::create([
                 'employee_id' => $employee->id,
-                'shirt' => $faker->randomElement(['S', 'M', 'L', 'XL']),
-                't_shirt' => $faker->randomElement(['S', 'M', 'L', 'XL']),
-                'pants' => $faker->randomElement(['28', '30', '32', '34', '36', '38']),
-                'shoes' => $faker->randomElement(['36', '37', '38', '39', '40', '41', '42', '43']),
+                'shirt' => $faker->randomElement(['XS', 'S', 'M', 'L', 'XL', 'XXL']),
+                't_shirt' => $faker->randomElement(['XS', 'S', 'M', 'L', 'XL', 'XXL']),
+                'pants' => $faker->numberBetween(28, 44),
+                'shoes' => $faker->numberBetween(35, 45),
+                'version' => 1,
+                'created_by' => 1,
             ]);
 
-            // Crear observación
-            Observation::create([
-                'employee_id' => $employee->id,
-                'comment' => $faker->sentence,
-            ]);
+            // Crear observaciones (1-3 por empleado)
+            $numObservations = $faker->numberBetween(1, 3);
+            for ($j = 0; $j < $numObservations; $j++) {
+                Observation::create([
+                    'employee_id' => $employee->id,
+                    'comment' => $faker->paragraph,
+                    'version' => 1,
+                    'created_by' => 1,
+                ]);
+            }
         }
     }
 } 

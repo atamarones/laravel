@@ -1,39 +1,42 @@
-import { useState, useEffect } from 'react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { useCallback, useEffect, useState } from 'react';
 import { router } from '@inertiajs/react';
-import { debounce } from 'lodash';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import debounce from 'lodash/debounce';
 
-export default function SearchInput({ route, placeholder = 'Buscar...' }) {
-    const [search, setSearch] = useState('');
-
-    const debouncedSearch = debounce((value) => {
-        router.get(route, { search: value }, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        });
-    }, 300);
+export default function SearchInput({ value = '', placeholder = 'Buscar...', className = '' }) {
+    const [query, setQuery] = useState(value);
 
     useEffect(() => {
-        return () => {
-            debouncedSearch.cancel();
-        };
-    }, []);
+        setQuery(value);
+    }, [value]);
 
-    const handleSearch = (e) => {
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            router.get(
+                route(route().current()),
+                { search: query },
+                { preserveState: true, preserveScroll: true }
+            );
+        }, 300),
+        []
+    );
+
+    const handleChange = (e) => {
         const value = e.target.value;
-        setSearch(value);
+        setQuery(value);
         debouncedSearch(value);
     };
 
     return (
-        <div className="relative flex items-center">
-            <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-gray-400" />
+        <div className={`relative ${className}`}>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+            </div>
             <input
                 type="text"
-                value={search}
-                onChange={handleSearch}
-                className="block w-full rounded-md border-0 py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
+                value={query}
+                onChange={handleChange}
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 placeholder={placeholder}
             />
         </div>

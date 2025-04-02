@@ -17,10 +17,11 @@ import {
     BriefcaseIcon,
     ChevronDownIcon,
     DocumentMagnifyingGlassIcon,
-    Cog8ToothIcon
+    Cog8ToothIcon,
+    UserGroupIcon
 } from '@heroicons/react/24/outline';
 
-export default function Authenticated({ user, header, children }) {
+export default function AuthenticatedLayout({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [openMenus, setOpenMenus] = useState({});
@@ -48,6 +49,27 @@ export default function Authenticated({ user, header, children }) {
             href: route('dashboard'), 
             icon: HomeIcon, 
             current: route().current('dashboard'),
+        },
+        {
+            name: 'Empleados',
+            icon: UserGroupIcon,
+            id: 'employees',
+            items: [
+                { 
+                    name: 'Lista de Empleados', 
+                    href: route('employees.index'), 
+                    icon: UsersIcon, 
+                    current: route().current('employees.*'),
+                    permission: 'employees.view'
+                },
+                { 
+                    name: 'Nuevo Empleado', 
+                    href: route('employees.create'), 
+                    icon: DocumentTextIcon, 
+                    current: route().current('employees.create'),
+                    permission: 'employees.create'
+                },
+            ]
         },
         {
             name: 'Administración',
@@ -287,8 +309,8 @@ export default function Authenticated({ user, header, children }) {
             {/* Mobile Navigation Bar */}
             <div className="md:pl-64">
                 <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow md:hidden">
-                                            <button
-                                                type="button"
+                    <button
+                        type="button"
                         className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 md:hidden"
                         onClick={() => setShowingNavigationDropdown(true)}
                     >
@@ -306,18 +328,18 @@ export default function Authenticated({ user, header, children }) {
                                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-75"></span>
                                     <span className="relative inline-flex h-4 w-4 rounded-full bg-primary-500"></span>
                                 </span>
-                                            </button>
+                            </button>
                             <Dropdown>
                                 <Dropdown.Trigger>
                                     <button className="flex items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                                         <div className="relative h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center">
                                             <span className="text-sm font-medium text-white">
                                                 {user.name.charAt(0).toUpperCase()}
-                                        </span>
+                                            </span>
                                         </div>
                                     </button>
-                                    </Dropdown.Trigger>
-                                    <Dropdown.Content>
+                                </Dropdown.Trigger>
+                                <Dropdown.Content>
                                     <div className="px-4 py-3">
                                         <p className="text-sm text-gray-900">{user.name}</p>
                                         <p className="text-sm text-gray-500">{user.email}</p>
@@ -330,11 +352,11 @@ export default function Authenticated({ user, header, children }) {
                                             Cerrar Sesión
                                         </Dropdown.Link>
                                     </div>
-                                    </Dropdown.Content>
-                                </Dropdown>
+                                </Dropdown.Content>
+                            </Dropdown>
                         </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
                 {/* Mobile menu */}
                 {isMobile && (
@@ -342,7 +364,7 @@ export default function Authenticated({ user, header, children }) {
                         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setShowingNavigationDropdown(false)}></div>
                         <div className="relative flex w-full max-w-xs flex-1 flex-col bg-gray-900 pt-5 pb-4">
                             <div className="absolute top-0 right-0 -mr-12 pt-2">
-                            <button
+                                <button
                                     type="button"
                                     className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                                     onClick={() => setShowingNavigationDropdown(false)}
@@ -426,9 +448,9 @@ export default function Authenticated({ user, header, children }) {
                                         <ArrowRightOnRectangleIcon className="mr-2 h-5 w-5" />
                                         Cerrar Sesión
                                     </Link>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
                     </div>
                 )}
 
@@ -447,7 +469,7 @@ export default function Authenticated({ user, header, children }) {
                         </div>
                     </div>
                 </main>
-                    </div>
+            </div>
         </div>
     );
 }

@@ -6,9 +6,12 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CityController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $query = City::query();
@@ -23,17 +26,25 @@ class CityController extends Controller
 
         return Inertia::render('Cities/Index', [
             'cities' => $query->paginate(25)
-                            ->withQueryString()
+                            ->withQueryString(),
+            'can' => [
+                'create' => $request->user()->can('create', City::class),
+                'edit' => $request->user()->can('update', City::class),
+                'delete' => $request->user()->can('delete', City::class),
+            ]
         ]);
     }
 
     public function create()
     {
+        $this->authorize('create', City::class);
         return Inertia::render('Cities/Create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', City::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'department' => 'required|string|max:255',
@@ -51,6 +62,7 @@ class CityController extends Controller
 
     public function edit(City $city)
     {
+        $this->authorize('update', $city);
         return Inertia::render('Cities/Edit', [
             'city' => $city
         ]);
@@ -58,6 +70,8 @@ class CityController extends Controller
 
     public function update(Request $request, City $city)
     {
+        $this->authorize('update', $city);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'department' => 'required|string|max:255',
@@ -75,6 +89,8 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
+        $this->authorize('delete', $city);
+        
         $city->delete();
 
         return redirect()->route('cities.index')

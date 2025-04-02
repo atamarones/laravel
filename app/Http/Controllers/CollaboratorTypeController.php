@@ -4,45 +4,53 @@ namespace App\Http\Controllers;
 
 use App\Models\CollaboratorType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CollaboratorTypeController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $query = CollaboratorType::query();
 
         if ($request->has('search')) {
             $search = $request->get('search');
-            $query->where('name', 'like', "%{$search}%");
+            $query->where('name', 'LIKE', "%{$search}%");
         }
 
-        $collaboratorTypes = $query->paginate(25)
-            ->withQueryString()
-            ->through(fn ($collaboratorType) => [
-                'id' => $collaboratorType->id,
-                'name' => $collaboratorType->name,
-                'description' => $collaboratorType->description,
-            ]);
-
         return Inertia::render('CollaboratorTypes/Index', [
-            'collaboratorTypes' => $collaboratorTypes,
+            'collaboratorTypes' => $query->paginate(25)
+                                      ->withQueryString(),
+            'can' => [
+                'create' => $request->user()->can('create', CollaboratorType::class),
+                'edit' => $request->user()->can('update', CollaboratorType::class),
+                'delete' => $request->user()->can('delete', CollaboratorType::class),
+            ]
         ]);
     }
 
     public function create()
     {
+        $this->authorize('create', CollaboratorType::class);
         return Inertia::render('CollaboratorTypes/Create');
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:collaborator_types',
-            'description' => 'nullable|string|max:1000',
+        $this->authorize('create', CollaboratorType::class);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
         ]);
 
-        CollaboratorType::create($validated);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        CollaboratorType::create($request->all());
 
         return redirect()->route('collaborator-types.index')
             ->with('success', 'Tipo de colaborador creado exitosamente.');
@@ -50,23 +58,25 @@ class CollaboratorTypeController extends Controller
 
     public function edit(CollaboratorType $collaboratorType)
     {
+        $this->authorize('update', $collaboratorType);
         return Inertia::render('CollaboratorTypes/Edit', [
-            'collaboratorType' => [
-                'id' => $collaboratorType->id,
-                'name' => $collaboratorType->name,
-                'description' => $collaboratorType->description,
-            ],
+            'collaboratorType' => $collaboratorType
         ]);
     }
 
     public function update(Request $request, CollaboratorType $collaboratorType)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:collaborator_types,name,' . $collaboratorType->id,
-            'description' => 'nullable|string|max:1000',
+        $this->authorize('update', $collaboratorType);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
         ]);
 
-        $collaboratorType->update($validated);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $collaboratorType->update($request->all());
 
         return redirect()->route('collaborator-types.index')
             ->with('success', 'Tipo de colaborador actualizado exitosamente.');
@@ -74,6 +84,8 @@ class CollaboratorTypeController extends Controller
 
     public function destroy(CollaboratorType $collaboratorType)
     {
+        $this->authorize('delete', $collaboratorType);
+        
         $collaboratorType->delete();
 
         return redirect()->route('collaborator-types.index')

@@ -6,6 +6,16 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Spatie\Permission\Models\Role;
 use App\Policies\RolePolicy;
+use App\Models\Employee;
+use App\Policies\EmployeePolicy;
+use App\Models\City;
+use App\Policies\CityPolicy;
+use App\Models\Position;
+use App\Policies\PositionPolicy;
+use App\Models\CollaboratorType;
+use App\Policies\CollaboratorTypePolicy;
+use App\Models\BloodType;
+use App\Policies\BloodTypePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Role::class => RolePolicy::class,
+        Employee::class => EmployeePolicy::class,
+        City::class => CityPolicy::class,
+        Position::class => PositionPolicy::class,
+        CollaboratorType::class => CollaboratorTypePolicy::class,
+        BloodType::class => BloodTypePolicy::class,
     ];
 
     /**

@@ -20,10 +20,10 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'users.delete']);
 
         // Permisos de empleados
-        Permission::firstOrCreate(['name' => 'employees.view']);
-        Permission::firstOrCreate(['name' => 'employees.create']);
-        Permission::firstOrCreate(['name' => 'employees.edit']);
-        Permission::firstOrCreate(['name' => 'employees.delete']);
+        Permission::firstOrCreate(['name' => 'employees.view', 'description' => 'Ver empleados']);
+        Permission::firstOrCreate(['name' => 'employees.create', 'description' => 'Crear empleados']);
+        Permission::firstOrCreate(['name' => 'employees.edit', 'description' => 'Editar empleados']);
+        Permission::firstOrCreate(['name' => 'employees.delete', 'description' => 'Eliminar empleados']);
 
         // Permisos de asistencias
         Permission::firstOrCreate(['name' => 'attendances.view']);

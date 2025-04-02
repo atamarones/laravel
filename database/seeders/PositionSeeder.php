@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Position;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class PositionSeeder extends Seeder
 {
@@ -14,17 +14,26 @@ class PositionSeeder extends Seeder
     {
         $positions = [
             ['name' => 'Gerente General'],
-            ['name' => 'Director de Recursos Humanos'],
-            ['name' => 'Director Financiero'],
-            ['name' => 'Director de Operaciones'],
+            ['name' => 'Gerente de Recursos Humanos'],
+            ['name' => 'Gerente Financiero'],
+            ['name' => 'Gerente de Operaciones'],
+            ['name' => 'Gerente de Ventas'],
             ['name' => 'Supervisor de Producción'],
-            ['name' => 'Analista de Sistemas'],
-            ['name' => 'Contador'],
-            ['name' => 'Asistente Administrativo'],
+            ['name' => 'Supervisor de Calidad'],
+            ['name' => 'Supervisor de Mantenimiento'],
+            ['name' => 'Operario de Producción'],
+            ['name' => 'Operario de Calidad'],
+            ['name' => 'Operario de Mantenimiento'],
+            ['name' => 'Auxiliar Administrativo'],
+            ['name' => 'Auxiliar Contable'],
+            ['name' => 'Auxiliar de Recursos Humanos'],
             ['name' => 'Recepcionista'],
-            ['name' => 'Auxiliar de Servicios Generales'],
+            ['name' => 'Mensajero'],
+            ['name' => 'Servicios Generales'],
         ];
 
-        DB::table('positions')->insert($positions);
+        foreach ($positions as $position) {
+            Position::create($position);
+        }
     }
 } 

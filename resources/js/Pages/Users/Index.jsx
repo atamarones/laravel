@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/Components/Pagination';
 import SearchInput from '@/Components/SearchInput';
 
-export default function Index({ auth, users }) {
+export default function Index({ auth, users, can }) {
     const [processing, setProcessing] = useState(false);
 
     const handleDelete = (id) => {
@@ -35,7 +35,7 @@ export default function Index({ auth, users }) {
                                         placeholder="Buscar usuarios..."
                                     />
                                 </div>
-                                {auth.user.permissions.includes('users.create') && (
+                                {can.create && (
                                     <div className="mt-4 sm:mt-0">
                                         <Link
                                             href={route('users.create')}
@@ -78,7 +78,7 @@ export default function Index({ auth, users }) {
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
                                                 {users.data.map((user) => (
-                                                    <tr key={user.id}>
+                                                    <tr key={user.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {user.name}
                                                         </td>
@@ -86,24 +86,32 @@ export default function Index({ auth, users }) {
                                                             {user.email}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                            {user.roles?.map(role => role.name).join(', ')}
+                                                            {user.roles.map(role => role.name).join(', ')}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            {auth.user.permissions.includes('users.edit') && (
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                            <Link
+                                                                href={route('users.show', user.id)}
+                                                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-gray-700 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                                            >
+                                                                <EyeIcon className="h-4 w-4" />
+                                                            </Link>
+
+                                                            {can.edit && (
                                                                 <Link
                                                                     href={route('users.edit', user.id)}
-                                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-indigo-700 hover:text-indigo-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Editar
+                                                                    <PencilIcon className="h-4 w-4" />
                                                                 </Link>
                                                             )}
-                                                            {auth.user.permissions.includes('users.delete') && (
+
+                                                            {can.delete && (
                                                                 <button
                                                                     onClick={() => handleDelete(user.id)}
                                                                     disabled={processing}
-                                                                    className="text-red-600 hover:text-red-900"
+                                                                    className="inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-red-700 hover:text-red-900 focus:outline-none transition ease-in-out duration-150"
                                                                 >
-                                                                    Eliminar
+                                                                    <TrashIcon className="h-4 w-4" />
                                                                 </button>
                                                             )}
                                                         </td>

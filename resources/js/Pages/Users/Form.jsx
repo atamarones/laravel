@@ -1,8 +1,8 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, Link } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
-import PrimaryButton from '@/Components/PrimaryButton';
+import { Button } from '@material-tailwind/react';
 import { Transition } from '@headlessui/react';
 
 export default function UserForm({ user = null, roles = [], className = '' }) {
@@ -110,20 +110,35 @@ export default function UserForm({ user = null, roles = [], className = '' }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>
-                        {user ? 'Actualizar' : 'Crear'} Usuario
-                    </PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="bg-primary-600 hover:bg-primary-700"
                     >
-                        <p className="text-sm text-gray-600">Guardado.</p>
-                    </Transition>
+                        {user ? 'Actualizar' : 'Crear'} Usuario
+                    </Button>
+
+                    <Link href={route('users.index')}>
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            color="gray"
+                            className="border-gray-300 text-gray-700 hover:border-gray-400"
+                        >
+                            Cancelar
+                        </Button>
+                    </Link>
                 </div>
+
+                <Transition
+                    show={recentlySuccessful}
+                    enter="transition ease-in-out"
+                    enterFrom="opacity-0"
+                    leave="transition ease-in-out"
+                    leaveTo="opacity-0"
+                >
+                    <p className="text-sm text-gray-600">Guardado.</p>
+                </Transition>
             </form>
         </section>
     );

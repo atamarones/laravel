@@ -6,9 +6,12 @@ use App\Models\BloodType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BloodTypeController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $query = BloodType::query();
@@ -20,25 +23,31 @@ class BloodTypeController extends Controller
 
         return Inertia::render('BloodTypes/Index', [
             'bloodTypes' => $query->paginate(25)
-                                ->withQueryString()
+                               ->withQueryString(),
+            'can' => [
+                'create' => $request->user()->can('create', BloodType::class),
+                'edit' => $request->user()->can('update', BloodType::class),
+                'delete' => $request->user()->can('delete', BloodType::class),
+            ]
         ]);
     }
 
     public function create()
     {
-        return view('blood-types.create');
+        $this->authorize('create', BloodType::class);
+        return Inertia::render('BloodTypes/Create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', BloodType::class);
+
         $validator = Validator::make($request->all(), [
-            'type' => 'required|string|max:3|unique:blood_types',
+            'name' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
         BloodType::create($request->all());
@@ -49,19 +58,22 @@ class BloodTypeController extends Controller
 
     public function edit(BloodType $bloodType)
     {
-        return view('blood-types.edit', compact('bloodType'));
+        $this->authorize('update', $bloodType);
+        return Inertia::render('BloodTypes/Edit', [
+            'bloodType' => $bloodType
+        ]);
     }
 
     public function update(Request $request, BloodType $bloodType)
     {
+        $this->authorize('update', $bloodType);
+
         $validator = Validator::make($request->all(), [
-            'type' => 'required|string|max:3|unique:blood_types,type,' . $bloodType->id,
+            'name' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
         $bloodType->update($request->all());
@@ -72,6 +84,8 @@ class BloodTypeController extends Controller
 
     public function destroy(BloodType $bloodType)
     {
+        $this->authorize('delete', $bloodType);
+        
         $bloodType->delete();
 
         return redirect()->route('blood-types.index')

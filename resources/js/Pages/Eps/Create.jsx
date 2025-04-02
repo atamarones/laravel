@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { Button } from '@material-tailwind/react';
 
 export default function Create({ auth }) {
     const form = useForm({
@@ -105,16 +106,25 @@ export default function Create({ auth }) {
                                     <InputError message={form.errors.regime} className="mt-2" />
                                 </div>
 
-                                <div className="flex items-center justify-end mt-4">
-                                    <Link
-                                        href={route('eps.index')}
-                                        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                <div className="flex items-center gap-4">
+                                    <Button
+                                        type="submit"
+                                        disabled={form.processing}
+                                        className="bg-primary-600 hover:bg-primary-700"
                                     >
-                                        Cancelar
-                                    </Link>
-                                    <PrimaryButton className="ml-4" disabled={form.processing}>
                                         Crear EPS
-                                    </PrimaryButton>
+                                    </Button>
+
+                                    <Link href={route('eps.index')}>
+                                        <Button
+                                            type="button"
+                                            variant="outlined"
+                                            color="gray"
+                                            className="border-gray-300 text-gray-700 hover:border-gray-400"
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </Link>
                                 </div>
                             </form>
                         </div>

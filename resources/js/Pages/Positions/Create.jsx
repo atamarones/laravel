@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { Button } from '@material-tailwind/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import TextArea from '@/Components/TextArea';
 
 export default function Create({ auth }) {
-    const form = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: '',
         description: '',
     });
 
     const submit = (e) => {
         e.preventDefault();
-        form.post(route('positions.store'));
+        post(route('positions.store'));
     };
 
     return (
@@ -34,37 +34,46 @@ export default function Create({ auth }) {
                                     <InputLabel htmlFor="name" value="Nombre" />
                                     <TextInput
                                         id="name"
+                                        value={data.name}
+                                        onChange={e => setData('name', e.target.value)}
                                         type="text"
                                         className="mt-1 block w-full"
-                                        value={form.data.name}
-                                        onChange={e => form.setData('name', e.target.value)}
                                         required
                                     />
-                                    <InputError message={form.errors.name} className="mt-2" />
+                                    <InputError message={errors.name} className="mt-2" />
                                 </div>
 
                                 <div>
                                     <InputLabel htmlFor="description" value="Descripción" />
                                     <TextArea
                                         id="description"
+                                        value={data.description}
+                                        onChange={e => setData('description', e.target.value)}
                                         className="mt-1 block w-full"
-                                        value={form.data.description}
-                                        onChange={e => form.setData('description', e.target.value)}
                                         rows="4"
                                     />
-                                    <InputError message={form.errors.description} className="mt-2" />
+                                    <InputError message={errors.description} className="mt-2" />
                                 </div>
 
-                                <div className="flex items-center justify-end mt-4">
-                                    <Link
-                                        href={route('positions.index')}
-                                        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                <div className="flex items-center gap-4">
+                                    <Button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="bg-primary-600 hover:bg-primary-700"
                                     >
-                                        Cancelar
-                                    </Link>
-                                    <PrimaryButton className="ml-4" disabled={form.processing}>
                                         Crear Cargo
-                                    </PrimaryButton>
+                                    </Button>
+
+                                    <Link href={route('positions.index')}>
+                                        <Button
+                                            type="button"
+                                            variant="outlined"
+                                            color="gray"
+                                            className="border-gray-300 text-gray-700 hover:border-gray-400"
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </Link>
                                 </div>
                             </form>
                         </div>
