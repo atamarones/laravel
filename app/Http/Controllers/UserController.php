@@ -32,7 +32,12 @@ class UserController extends Controller
         return Inertia::render('Users/Index', [
             'users' => $query->with('roles')
                             ->paginate(25)
-                            ->withQueryString()
+                            ->withQueryString(),
+            'can' => [
+                'create' => $request->user()->can('users.create'),
+                'edit' => $request->user()->can('users.edit'),
+                'delete' => $request->user()->can('users.delete'),
+            ]
         ]);
     }
 

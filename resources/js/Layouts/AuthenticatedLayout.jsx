@@ -24,7 +24,12 @@ import {
 export default function AuthenticatedLayout({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-    const [openMenus, setOpenMenus] = useState({});
+    const [openMenus, setOpenMenus] = useState({
+        master: true,
+        employees: false,
+        admin: true,
+        absences: false
+    });
 
     useEffect(() => {
         const handleResize = () => {
@@ -41,6 +46,20 @@ export default function AuthenticatedLayout({ user, header, children }) {
             ...prev,
             [menuId]: !prev[menuId]
         }));
+    };
+
+    const hasPermission = (permission) => {
+        // Si el usuario es super-admin, tiene todos los permisos
+        if (user?.roles?.includes('super-admin')) return true;
+        
+        // Si no se requiere permiso específico
+        if (!permission) return true;
+        
+        // Si no hay usuario o permisos
+        if (!user || !user.permissions) return false;
+        
+        // Verificar el permiso específico
+        return user.permissions.includes(permission);
     };
 
     const navigation = [
@@ -98,11 +117,11 @@ export default function AuthenticatedLayout({ user, header, children }) {
             id: 'master',
             items: [
                 {
-                    name: 'EPS',
-                    href: route('eps.index'),
-                    icon: BuildingOfficeIcon,
-                    current: route().current('eps.*'),
-                    permission: 'eps.view'
+                    name: 'Cargos',
+                    href: route('positions.index'),
+                    icon: BriefcaseIcon,
+                    current: route().current('positions.*'),
+                    permission: 'positions.view'
                 },
                 {
                     name: 'CIE-10',
@@ -119,6 +138,27 @@ export default function AuthenticatedLayout({ user, header, children }) {
                     permission: 'cities.view'
                 },
                 {
+                    name: 'EPS',
+                    href: route('eps.index'),
+                    icon: BuildingOfficeIcon,
+                    current: route().current('eps.*'),
+                    permission: 'eps.view'
+                },
+                {
+                    name: 'Estados Civiles',
+                    href: route('civil-status.index'),
+                    icon: UsersIcon,
+                    current: route().current('civil-status.*'),
+                    permission: 'civil-status.view'
+                },
+                {
+                    name: 'Géneros',
+                    href: route('genders.index'),
+                    icon: UsersIcon,
+                    current: route().current('genders.*'),
+                    permission: 'genders.view'
+                },
+                {
                     name: 'Tipos de Colaborador',
                     href: route('collaborator-types.index'),
                     icon: UserCircleIcon,
@@ -126,11 +166,11 @@ export default function AuthenticatedLayout({ user, header, children }) {
                     permission: 'collaborator-types.view'
                 },
                 {
-                    name: 'Cargos',
-                    href: route('positions.index'),
-                    icon: BriefcaseIcon,
-                    current: route().current('positions.*'),
-                    permission: 'positions.view'
+                    name: 'Tipos de Ausencia',
+                    href: route('absence-types.index'),
+                    icon: UsersIcon,
+                    current: route().current('absence-types.*'),
+                    permission: 'absence-types.view'
                 },
             ]
         },
@@ -171,42 +211,10 @@ export default function AuthenticatedLayout({ user, header, children }) {
         }
     ];
 
-    // Añadir log para verificar los permisos del usuario al cargar
-    useEffect(() => {
-        console.log('Permisos del usuario:', user.permissions);
-    }, []);
-
-    const hasPermission = (permission) => {
-        // Si no se requiere permiso específico, permitir acceso
-        if (!permission) return true;
-        
-        // Verificar que user y permissions existan
-        if (!user || !user.permissions) {
-            console.log('No hay permisos definidos para el usuario:', user);
-            return false;
-        }
-
-        // Verificar el permiso específico
-        const hasAccess = user.permissions.includes(permission);
-        return hasAccess;
-    };
-
-    // Función para verificar si el usuario tiene al menos un permiso de los submenús
-    const hasAnyPermissionInSubmenu = (items) => {
-        return items.some(item => hasPermission(item.permission));
-    };
-
-    // Log inicial para depuración
-    useEffect(() => {
-        console.log('Estado inicial del usuario:', user);
-    }, []);
-
     const renderNavItem = (item) => {
         if (item.items) {
-            // Solo mostrar el menú si el usuario tiene al menos un permiso en los submenús
-            if (!hasAnyPermissionInSubmenu(item.items)) {
-                return null;
-            }
+            const hasPermittedItems = item.items.some(subItem => hasPermission(subItem.permission));
+            if (!hasPermittedItems) return null;
 
             return (
                 <div key={item.name} className="space-y-1">
@@ -231,7 +239,7 @@ export default function AuthenticatedLayout({ user, header, children }) {
                             openMenus[item.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                         }`}
                     >
-                        {item.items.map((subItem) => (
+                        {item.items.map((subItem) => 
                             hasPermission(subItem.permission) && (
                                 <Link
                                     key={subItem.name}
@@ -246,27 +254,25 @@ export default function AuthenticatedLayout({ user, header, children }) {
                                     {subItem.name}
                                 </Link>
                             )
-                        ))}
+                        )}
                     </div>
                 </div>
             );
         }
 
-        return (
-            hasPermission(item.permission) && (
-                <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`group flex items-center rounded-lg px-3 py-2 text-sm font-medium ${
-                        item.current
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }`}
-                >
-                    <item.icon className="mr-3 h-6 w-6 flex-shrink-0" />
-                    {item.name}
-                </Link>
-            )
+        return hasPermission(item.permission) && (
+            <Link
+                key={item.name}
+                href={item.href}
+                className={`group flex items-center rounded-lg px-3 py-2 text-sm font-medium ${
+                    item.current
+                        ? 'bg-gray-800 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                }`}
+            >
+                <item.icon className="mr-3 h-6 w-6 flex-shrink-0" />
+                {item.name}
+            </Link>
         );
     };
 
@@ -317,45 +323,6 @@ export default function AuthenticatedLayout({ user, header, children }) {
                         <span className="sr-only">Abrir menú</span>
                         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
-                    <div className="flex flex-1 justify-between px-4">
-                        <div className="flex flex-1 items-center">
-                            <ApplicationLogo className="h-8 w-auto" />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <button className="relative rounded-full bg-white p-1 text-gray-500">
-                                <BellIcon className="h-6 w-6" />
-                                <span className="absolute -right-1 -top-1 flex h-4 w-4">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-75"></span>
-                                    <span className="relative inline-flex h-4 w-4 rounded-full bg-primary-500"></span>
-                                </span>
-                            </button>
-                            <Dropdown>
-                                <Dropdown.Trigger>
-                                    <button className="flex items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-                                        <div className="relative h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center">
-                                            <span className="text-sm font-medium text-white">
-                                                {user.name.charAt(0).toUpperCase()}
-                                            </span>
-                                        </div>
-                                    </button>
-                                </Dropdown.Trigger>
-                                <Dropdown.Content>
-                                    <div className="px-4 py-3">
-                                        <p className="text-sm text-gray-900">{user.name}</p>
-                                        <p className="text-sm text-gray-500">{user.email}</p>
-                                    </div>
-                                    <div className="border-t border-gray-200">
-                                        <Dropdown.Link href={route('profile.edit')}>
-                                            Mi Perfil
-                                        </Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Cerrar Sesión
-                                        </Dropdown.Link>
-                                    </div>
-                                </Dropdown.Content>
-                            </Dropdown>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Mobile menu */}

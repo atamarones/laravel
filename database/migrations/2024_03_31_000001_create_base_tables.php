@@ -132,20 +132,36 @@ return new class extends Migration
             $table->index('regime');
         });
 
-        Schema::create('cie10', function (Blueprint $table) {
+        Schema::create('cie10s', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
             $table->string('description');
-            $table->string('version')->nullable();
-            $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
-            $table->string('deleted_by')->nullable();
+            $table->string('group')->nullable();
+            $table->string('segment')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
-            // Índices
+
+            // Índices para búsqueda optimizada
             $table->index('code');
-            $table->index('description');
+            $table->fulltext(['description']); // Índice fulltext para búsqueda en descripción
+        });
+
+        Schema::create('employees', function (Blueprint $table) {
+            $table->id();
+            $table->string('identification_number')->unique();
+            $table->string('full_name');
+            $table->foreignId('gender_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('civil_status_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('collaborator_type_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('position_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('eps_id')->nullable()->constrained('eps')->nullOnDelete();
+            $table->timestamps();
+            $table->softDeletes();
+
+            // Índices para optimizar búsquedas
+            $table->index('identification_number');
+            $table->index('full_name');
+            $table->fulltext('full_name'); // Índice fulltext para búsquedas más eficientes en nombres
         });
     }
 
@@ -159,6 +175,7 @@ return new class extends Migration
         Schema::dropIfExists('blood_types');
         Schema::dropIfExists('termination_reasons');
         Schema::dropIfExists('eps');
-        Schema::dropIfExists('cie10');
+        Schema::dropIfExists('cie10s');
+        Schema::dropIfExists('employees');
     }
 }; 

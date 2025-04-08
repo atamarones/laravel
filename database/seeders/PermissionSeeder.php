@@ -44,55 +44,73 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'accidents.delete']);
 
         // Permisos para Roles
-        Permission::create(['name' => 'roles.view']);
-        Permission::create(['name' => 'roles.create']);
-        Permission::create(['name' => 'roles.edit']);
-        Permission::create(['name' => 'roles.delete']);
+        Permission::firstOrCreate(['name' => 'roles.view']);
+        Permission::firstOrCreate(['name' => 'roles.create']);
+        Permission::firstOrCreate(['name' => 'roles.edit']);
+        Permission::firstOrCreate(['name' => 'roles.delete']);
 
         // Permisos para EPS
-        Permission::create(['name' => 'eps.view']);
-        Permission::create(['name' => 'eps.create']);
-        Permission::create(['name' => 'eps.edit']);
-        Permission::create(['name' => 'eps.delete']);
+        Permission::firstOrCreate(['name' => 'eps.view']);
+        Permission::firstOrCreate(['name' => 'eps.create']);
+        Permission::firstOrCreate(['name' => 'eps.edit']);
+        Permission::firstOrCreate(['name' => 'eps.delete']);
 
         // Permisos para Tipos de Sangre
-        Permission::create(['name' => 'blood-types.view']);
-        Permission::create(['name' => 'blood-types.create']);
-        Permission::create(['name' => 'blood-types.edit']);
-        Permission::create(['name' => 'blood-types.delete']);
+        Permission::firstOrCreate(['name' => 'blood-types.view']);
+        Permission::firstOrCreate(['name' => 'blood-types.create']);
+        Permission::firstOrCreate(['name' => 'blood-types.edit']);
+        Permission::firstOrCreate(['name' => 'blood-types.delete']);
 
         // Permisos para Ciudades
-        Permission::create(['name' => 'cities.view']);
-        Permission::create(['name' => 'cities.create']);
-        Permission::create(['name' => 'cities.edit']);
-        Permission::create(['name' => 'cities.delete']);
+        Permission::firstOrCreate(['name' => 'cities.view']);
+        Permission::firstOrCreate(['name' => 'cities.create']);
+        Permission::firstOrCreate(['name' => 'cities.edit']);
+        Permission::firstOrCreate(['name' => 'cities.delete']);
 
         // Permisos para Razones de Terminación
-        Permission::create(['name' => 'termination-reasons.view']);
-        Permission::create(['name' => 'termination-reasons.create']);
-        Permission::create(['name' => 'termination-reasons.edit']);
-        Permission::create(['name' => 'termination-reasons.delete']);
+        Permission::firstOrCreate(['name' => 'termination-reasons.view']);
+        Permission::firstOrCreate(['name' => 'termination-reasons.create']);
+        Permission::firstOrCreate(['name' => 'termination-reasons.edit']);
+        Permission::firstOrCreate(['name' => 'termination-reasons.delete']);
 
         // Permisos para Cargos
-        Permission::create(['name' => 'positions.view']);
-        Permission::create(['name' => 'positions.create']);
-        Permission::create(['name' => 'positions.edit']);
-        Permission::create(['name' => 'positions.delete']);
+        Permission::firstOrCreate(['name' => 'positions.view']);
+        Permission::firstOrCreate(['name' => 'positions.create']);
+        Permission::firstOrCreate(['name' => 'positions.edit']);
+        Permission::firstOrCreate(['name' => 'positions.delete']);
 
         // Permisos para Tipos de Colaborador
-        Permission::create(['name' => 'collaborator-types.view']);
-        Permission::create(['name' => 'collaborator-types.create']);
-        Permission::create(['name' => 'collaborator-types.edit']);
-        Permission::create(['name' => 'collaborator-types.delete']);
+        Permission::firstOrCreate(['name' => 'collaborator-types.view']);
+        Permission::firstOrCreate(['name' => 'collaborator-types.create']);
+        Permission::firstOrCreate(['name' => 'collaborator-types.edit']);
+        Permission::firstOrCreate(['name' => 'collaborator-types.delete']);
 
         // Permisos para CIE-10
-        Permission::create(['name' => 'cie10.view']);
-        Permission::create(['name' => 'cie10.create']);
-        Permission::create(['name' => 'cie10.edit']);
-        Permission::create(['name' => 'cie10.delete']);
+        Permission::firstOrCreate(['name' => 'cie10.view']);
+        Permission::firstOrCreate(['name' => 'cie10.create']);
+        Permission::firstOrCreate(['name' => 'cie10.edit']);
+        Permission::firstOrCreate(['name' => 'cie10.delete']);
+
+        // Permisos para Géneros
+        Permission::firstOrCreate(['name' => 'genders.view']);
+        Permission::firstOrCreate(['name' => 'genders.create']);
+        Permission::firstOrCreate(['name' => 'genders.edit']);
+        Permission::firstOrCreate(['name' => 'genders.delete']);
+
+        // Permisos para Estados Civiles
+        Permission::firstOrCreate(['name' => 'civil-status.view']);
+        Permission::firstOrCreate(['name' => 'civil-status.create']);
+        Permission::firstOrCreate(['name' => 'civil-status.edit']);
+        Permission::firstOrCreate(['name' => 'civil-status.delete']);
+
+        // Permisos para Tipos de Ausencia
+        Permission::firstOrCreate(['name' => 'absence-types.view']);
+        Permission::firstOrCreate(['name' => 'absence-types.create']);
+        Permission::firstOrCreate(['name' => 'absence-types.edit']);
+        Permission::firstOrCreate(['name' => 'absence-types.delete']);
 
         // Crear rol super-admin y asignar todos los permisos
-        $role = Role::create(['name' => 'super-admin']);
+        $role = Role::firstOrCreate(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());
     }
 } 

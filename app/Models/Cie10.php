@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cie10 extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'cie10';
     protected $primaryKey = 'code';
@@ -17,10 +18,12 @@ class Cie10 extends Model
     protected $fillable = [
         'code',
         'description',
-        'category',
+        'group',
         'segment',
+        'version',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'deleted_by'
     ];
 
     protected static function boot()

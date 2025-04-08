@@ -25,22 +25,22 @@ class PositionController extends Controller
             'positions' => $query->paginate(25)
                                ->withQueryString(),
             'can' => [
-                'create' => $request->user()->can('create', Position::class),
-                'edit' => $request->user()->can('update', Position::class),
-                'delete' => $request->user()->can('delete', Position::class),
+                'create' => $request->user()->can('positions.create'),
+                'edit' => $request->user()->can('positions.edit'),
+                'delete' => $request->user()->can('positions.delete'),
             ]
         ]);
     }
 
     public function create()
     {
-        $this->authorize('create', Position::class);
+        $this->authorize('positions.create');
         return Inertia::render('Positions/Create');
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create', Position::class);
+        $this->authorize('positions.create');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -56,9 +56,18 @@ class PositionController extends Controller
             ->with('success', 'Cargo creado exitosamente.');
     }
 
+    public function show(Position $position)
+    {
+        $this->authorize('positions.view');
+        
+        return Inertia::render('Positions/Show', [
+            'position' => $position
+        ]);
+    }
+
     public function edit(Position $position)
     {
-        $this->authorize('update', $position);
+        $this->authorize('positions.edit');
         return Inertia::render('Positions/Edit', [
             'position' => $position
         ]);
@@ -66,7 +75,7 @@ class PositionController extends Controller
 
     public function update(Request $request, Position $position)
     {
-        $this->authorize('update', $position);
+        $this->authorize('positions.edit');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -84,7 +93,7 @@ class PositionController extends Controller
 
     public function destroy(Position $position)
     {
-        $this->authorize('delete', $position);
+        $this->authorize('positions.delete');
         
         $position->delete();
 

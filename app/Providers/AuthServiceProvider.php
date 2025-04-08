@@ -16,6 +16,8 @@ use App\Models\CollaboratorType;
 use App\Policies\CollaboratorTypePolicy;
 use App\Models\BloodType;
 use App\Policies\BloodTypePolicy;
+use App\Models\Absence;
+use App\Policies\AbsencePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         Position::class => PositionPolicy::class,
         CollaboratorType::class => CollaboratorTypePolicy::class,
         BloodType::class => BloodTypePolicy::class,
+        Absence::class => AbsencePolicy::class,
     ];
 
     /**

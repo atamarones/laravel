@@ -25,22 +25,22 @@ class BloodTypeController extends Controller
             'bloodTypes' => $query->paginate(25)
                                ->withQueryString(),
             'can' => [
-                'create' => $request->user()->can('create', BloodType::class),
-                'edit' => $request->user()->can('update', BloodType::class),
-                'delete' => $request->user()->can('delete', BloodType::class),
+                'create' => $request->user()->can('blood-types.create'),
+                'edit' => $request->user()->can('blood-types.edit'),
+                'delete' => $request->user()->can('blood-types.delete'),
             ]
         ]);
     }
 
     public function create()
     {
-        $this->authorize('create', BloodType::class);
+        $this->authorize('blood-types.create');
         return Inertia::render('BloodTypes/Create');
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create', BloodType::class);
+        $this->authorize('blood-types.create');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -56,9 +56,18 @@ class BloodTypeController extends Controller
             ->with('success', 'Tipo de sangre creado exitosamente.');
     }
 
+    public function show(BloodType $bloodType)
+    {
+        $this->authorize('blood-types.view');
+        
+        return Inertia::render('BloodTypes/Show', [
+            'bloodType' => $bloodType
+        ]);
+    }
+
     public function edit(BloodType $bloodType)
     {
-        $this->authorize('update', $bloodType);
+        $this->authorize('blood-types.edit');
         return Inertia::render('BloodTypes/Edit', [
             'bloodType' => $bloodType
         ]);
@@ -66,7 +75,7 @@ class BloodTypeController extends Controller
 
     public function update(Request $request, BloodType $bloodType)
     {
-        $this->authorize('update', $bloodType);
+        $this->authorize('blood-types.edit');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -84,7 +93,7 @@ class BloodTypeController extends Controller
 
     public function destroy(BloodType $bloodType)
     {
-        $this->authorize('delete', $bloodType);
+        $this->authorize('blood-types.delete');
         
         $bloodType->delete();
 

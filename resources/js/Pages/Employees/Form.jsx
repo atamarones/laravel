@@ -14,6 +14,7 @@ export default function EmployeeForm({
     collaboratorTypes = [],
     cities = [],
     bloodTypes = [],
+    epsList = [],
     className = '' 
 }) {
     // Transformar las opciones al formato correcto para el componente Select
@@ -23,6 +24,7 @@ export default function EmployeeForm({
     const collaboratorTypeOptions = collaboratorTypes.map(type => ({ value: type.id, label: type.name }));
     const cityOptions = cities.map(city => ({ value: city.id, label: city.name }));
     const bloodTypeOptions = bloodTypes.map(type => ({ value: type.id, label: type.name }));
+    const epsOptions = epsList.map(eps => ({ value: eps.id, label: eps.name }));
 
     // Opciones para los otros selectores
     const bankOptions = [
@@ -48,40 +50,40 @@ export default function EmployeeForm({
         birth_date: employee?.birth_date ? new Date(employee.birth_date).toISOString().split('T')[0] : '',
         birth_place: employee?.birth_place || '',
         gender_id: employee?.gender?.id || '',
-        civil_status_id: employee?.civilStatus?.id || '',
+        civil_status_id: employee?.civil_status?.id || '',
         height: employee?.height || '',
         weight: employee?.weight || '',
         start_date: employee?.start_date ? new Date(employee.start_date).toISOString().split('T')[0] : '',
         position_id: employee?.position?.id || '',
-        collaborator_type_id: employee?.collaboratorType?.id || '',
+        collaborator_type_id: employee?.collaborator_type?.id || '',
         city_id: employee?.city?.id || '',
+        eps_id: employee?.eps?.id || '',
         
         // Información de contacto
-        address: employee?.contactInformation?.address || '',
-        phone: employee?.contactInformation?.phone || '',
-        email: employee?.contactInformation?.email || '',
+        address: employee?.contact_information?.address || '',
+        phone: employee?.contact_information?.phone || '',
+        email: employee?.contact_information?.email || '',
 
         // Seguridad social
-        eps: employee?.socialSecurity?.eps || '',
-        pension_fund: employee?.socialSecurity?.pension_fund || '',
-        arl: employee?.socialSecurity?.arl || '',
-        compensation_fund: employee?.socialSecurity?.compensation_fund || '',
-        blood_type_id: employee?.socialSecurity?.bloodType?.id || '',
+        pension_fund: employee?.social_security?.pension_fund || '',
+        arl: employee?.social_security?.arl || '',
+        compensation_fund: employee?.social_security?.compensation_fund || '',
+        blood_type_id: employee?.social_security?.blood_type?.id || '',
 
         // Salario
         salary: employee?.salary?.salary || '',
         salary_exclusion: employee?.salary?.salary_exclusion || '',
 
         // Cuenta bancaria
-        bank: employee?.bankAccount?.bank || '',
-        account_type: employee?.bankAccount?.account_type || '',
-        account_number: employee?.bankAccount?.account_number || '',
+        bank: employee?.bank_account?.bank || '',
+        account_type: employee?.bank_account?.account_type || '',
+        account_number: employee?.bank_account?.account_number || '',
 
         // Contacto de emergencia
-        contact_name: employee?.emergencyContact?.contact_name || '',
-        relationship: employee?.emergencyContact?.relationship || '',
-        contact_phone: employee?.emergencyContact?.contact_phone || '',
-        contact_address: employee?.emergencyContact?.contact_address || '',
+        contact_name: employee?.emergency_contact?.contact_name || '',
+        relationship: employee?.emergency_contact?.relationship || '',
+        contact_phone: employee?.emergency_contact?.contact_phone || '',
+        contact_address: employee?.emergency_contact?.contact_address || '',
 
         // Uniforme
         shirt: employee?.uniform?.shirt || '',
@@ -98,40 +100,40 @@ export default function EmployeeForm({
                 birth_date: employee.birth_date ? new Date(employee.birth_date).toISOString().split('T')[0] : '',
                 birth_place: employee.birth_place || '',
                 gender_id: employee.gender?.id || '',
-                civil_status_id: employee.civilStatus?.id || '',
+                civil_status_id: employee.civil_status?.id || '',
                 height: employee.height || '',
                 weight: employee.weight || '',
                 start_date: employee.start_date ? new Date(employee.start_date).toISOString().split('T')[0] : '',
                 position_id: employee.position?.id || '',
-                collaborator_type_id: employee.collaboratorType?.id || '',
+                collaborator_type_id: employee.collaborator_type?.id || '',
                 city_id: employee.city?.id || '',
+                eps_id: employee.eps?.id || '',
                 
                 // Información de contacto
-                address: employee.contactInformation?.address || '',
-                phone: employee.contactInformation?.phone || '',
-                email: employee.contactInformation?.email || '',
+                address: employee.contact_information?.address || '',
+                phone: employee.contact_information?.phone || '',
+                email: employee.contact_information?.email || '',
 
                 // Seguridad social
-                eps: employee.socialSecurity?.eps || '',
-                pension_fund: employee.socialSecurity?.pension_fund || '',
-                arl: employee.socialSecurity?.arl || '',
-                compensation_fund: employee.socialSecurity?.compensation_fund || '',
-                blood_type_id: employee.socialSecurity?.bloodType?.id || '',
+                pension_fund: employee.social_security?.pension_fund || '',
+                arl: employee.social_security?.arl || '',
+                compensation_fund: employee.social_security?.compensation_fund || '',
+                blood_type_id: employee.social_security?.blood_type?.id || '',
 
                 // Salario
                 salary: employee.salary?.salary || '',
                 salary_exclusion: employee.salary?.salary_exclusion || '',
 
                 // Cuenta bancaria
-                bank: employee.bankAccount?.bank || '',
-                account_type: employee.bankAccount?.account_type || '',
-                account_number: employee.bankAccount?.account_number || '',
+                bank: employee.bank_account?.bank || '',
+                account_type: employee.bank_account?.account_type || '',
+                account_number: employee.bank_account?.account_number || '',
 
                 // Contacto de emergencia
-                contact_name: employee.emergencyContact?.contact_name || '',
-                relationship: employee.emergencyContact?.relationship || '',
-                contact_phone: employee.emergencyContact?.contact_phone || '',
-                contact_address: employee.emergencyContact?.contact_address || '',
+                contact_name: employee.emergency_contact?.contact_name || '',
+                relationship: employee.emergency_contact?.relationship || '',
+                contact_phone: employee.emergency_contact?.contact_phone || '',
+                contact_address: employee.emergency_contact?.contact_address || '',
 
                 // Uniforme
                 shirt: employee.uniform?.shirt || '',
@@ -387,20 +389,22 @@ export default function EmployeeForm({
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Seguridad Social</h3>
 
                     <div className="mb-4">
-                        <InputLabel htmlFor="eps" value="EPS" />
-                        <TextInput
-                            id="eps"
-                            type="text"
-                            name="eps"
-                            value={data.eps}
+                        <InputLabel htmlFor="eps_id" value="EPS" required />
+                        <Select
+                            id="eps_id"
+                            name="eps_id"
+                            value={data.eps_id}
                             className="mt-1 block w-full"
-                            onChange={(e) => setData('eps', e.target.value)}
+                            onChange={(e) => setData('eps_id', e.target.value)}
+                            options={epsOptions}
+                            placeholder="Seleccione una EPS"
+                            required
                         />
-                        <InputError message={errors.eps} className="mt-2" />
+                        <InputError message={errors.eps_id} className="mt-2" />
                     </div>
 
                     <div className="mb-4">
-                        <InputLabel htmlFor="pension_fund" value="Fondo de Pensiones" />
+                        <InputLabel htmlFor="pension_fund" value="Fondo de Pensiones" required />
                         <TextInput
                             id="pension_fund"
                             type="text"
@@ -408,6 +412,7 @@ export default function EmployeeForm({
                             value={data.pension_fund}
                             className="mt-1 block w-full"
                             onChange={(e) => setData('pension_fund', e.target.value)}
+                            required
                         />
                         <InputError message={errors.pension_fund} className="mt-2" />
                     </div>

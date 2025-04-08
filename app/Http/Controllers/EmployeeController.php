@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\Eps;
 
 class EmployeeController extends Controller
 {
@@ -80,6 +81,7 @@ class EmployeeController extends Controller
             'collaboratorTypes' => CollaboratorType::all(),
             'cities' => City::all(),
             'bloodTypes' => BloodType::all(),
+            'epsList' => Eps::all(),
         ]);
     }
 
@@ -100,6 +102,7 @@ class EmployeeController extends Controller
             'position_id' => 'required|exists:positions,id',
             'collaborator_type_id' => 'required|exists:collaborator_types,id',
             'city_id' => 'required|exists:cities,id',
+            'eps_id' => 'required|exists:eps,id',
 
             // Información de contacto
             'address' => 'required|string|max:255',
@@ -107,7 +110,6 @@ class EmployeeController extends Controller
             'email' => 'required|email|max:255',
 
             // Seguridad social
-            'eps' => 'required|string|max:255',
             'pension_fund' => 'required|string|max:255',
             'arl' => 'required|string|max:255',
             'compensation_fund' => 'required|string|max:255',
@@ -148,6 +150,7 @@ class EmployeeController extends Controller
             'position_id' => $validated['position_id'],
             'collaborator_type_id' => $validated['collaborator_type_id'],
             'city_id' => $validated['city_id'],
+            'eps_id' => $validated['eps_id'],
         ]);
 
         $employee->contactInformation()->create([
@@ -157,7 +160,6 @@ class EmployeeController extends Controller
         ]);
 
         $employee->socialSecurity()->create([
-            'eps' => $validated['eps'],
             'pension_fund' => $validated['pension_fund'],
             'arl' => $validated['arl'],
             'compensation_fund' => $validated['compensation_fund'],
@@ -224,28 +226,30 @@ class EmployeeController extends Controller
     {
         $this->authorize('update', $employee);
 
-        $employee = Employee::with([
+        $employee->load([
             'gender',
             'civilStatus',
             'position',
             'collaboratorType',
             'city',
+            'eps',
             'contactInformation',
             'socialSecurity.bloodType',
             'salary',
             'bankAccount',
             'emergencyContact',
             'uniform',
-        ])->findOrFail($employee->id);
+        ]);
 
         return Inertia::render('Employees/Edit', [
             'employee' => $employee,
-            'genders' => Gender::select('id', 'name')->get(),
-            'civilStatuses' => CivilStatus::select('id', 'name')->get(),
-            'positions' => Position::select('id', 'name')->get(),
-            'collaboratorTypes' => CollaboratorType::select('id', 'name')->get(),
-            'cities' => City::select('id', 'name')->get(),
-            'bloodTypes' => BloodType::select('id', 'name')->get(),
+            'genders' => Gender::all(),
+            'civilStatuses' => CivilStatus::all(),
+            'positions' => Position::all(),
+            'collaboratorTypes' => CollaboratorType::all(),
+            'cities' => City::all(),
+            'bloodTypes' => BloodType::all(),
+            'epsList' => Eps::all(),
         ]);
     }
 
@@ -266,6 +270,7 @@ class EmployeeController extends Controller
             'position_id' => 'required|exists:positions,id',
             'collaborator_type_id' => 'required|exists:collaborator_types,id',
             'city_id' => 'required|exists:cities,id',
+            'eps_id' => 'required|exists:eps,id',
 
             // Información de contacto
             'address' => 'required|string|max:255',
@@ -273,7 +278,6 @@ class EmployeeController extends Controller
             'email' => 'required|email|max:255',
 
             // Seguridad social
-            'eps' => 'required|string|max:255',
             'pension_fund' => 'required|string|max:255',
             'arl' => 'required|string|max:255',
             'compensation_fund' => 'required|string|max:255',
@@ -314,6 +318,7 @@ class EmployeeController extends Controller
             'position_id' => $validated['position_id'],
             'collaborator_type_id' => $validated['collaborator_type_id'],
             'city_id' => $validated['city_id'],
+            'eps_id' => $validated['eps_id'],
         ]);
 
         $employee->contactInformation()->update([
@@ -323,7 +328,6 @@ class EmployeeController extends Controller
         ]);
 
         $employee->socialSecurity()->update([
-            'eps' => $validated['eps'],
             'pension_fund' => $validated['pension_fund'],
             'arl' => $validated['arl'],
             'compensation_fund' => $validated['compensation_fund'],

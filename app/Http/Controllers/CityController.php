@@ -28,22 +28,22 @@ class CityController extends Controller
             'cities' => $query->paginate(25)
                             ->withQueryString(),
             'can' => [
-                'create' => $request->user()->can('create', City::class),
-                'edit' => $request->user()->can('update', City::class),
-                'delete' => $request->user()->can('delete', City::class),
+                'create' => $request->user()->can('cities.create'),
+                'edit' => $request->user()->can('cities.edit'),
+                'delete' => $request->user()->can('cities.delete'),
             ]
         ]);
     }
 
     public function create()
     {
-        $this->authorize('create', City::class);
+        $this->authorize('cities.create');
         return Inertia::render('Cities/Create');
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create', City::class);
+        $this->authorize('cities.create');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -60,9 +60,18 @@ class CityController extends Controller
             ->with('success', 'Ciudad creada exitosamente.');
     }
 
+    public function show(City $city)
+    {
+        $this->authorize('cities.view');
+        
+        return Inertia::render('Cities/Show', [
+            'city' => $city
+        ]);
+    }
+
     public function edit(City $city)
     {
-        $this->authorize('update', $city);
+        $this->authorize('cities.edit');
         return Inertia::render('Cities/Edit', [
             'city' => $city
         ]);
@@ -70,7 +79,7 @@ class CityController extends Controller
 
     public function update(Request $request, City $city)
     {
-        $this->authorize('update', $city);
+        $this->authorize('cities.edit');
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -89,7 +98,7 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
-        $this->authorize('delete', $city);
+        $this->authorize('cities.delete');
         
         $city->delete();
 

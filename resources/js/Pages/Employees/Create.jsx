@@ -9,7 +9,8 @@ export default function Create({
     positions,
     collaboratorTypes,
     cities,
-    bloodTypes
+    bloodTypes,
+    epsList
 }) {
     return (
         <AuthenticatedLayout
@@ -27,6 +28,7 @@ export default function Create({
                         collaboratorTypes={collaboratorTypes}
                         cities={cities}
                         bloodTypes={bloodTypes}
+                        epsList={epsList}
                         className="space-y-6"
                     />
                 </div>

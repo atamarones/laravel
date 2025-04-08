@@ -12,7 +12,7 @@ class SocialSecurity extends Model
 
     protected $fillable = [
         'employee_id',
-        'eps',
+        'eps_id',
         'pension_fund',
         'arl',
         'compensation_fund',
@@ -27,5 +27,10 @@ class SocialSecurity extends Model
     public function bloodType(): BelongsTo
     {
         return $this->belongsTo(BloodType::class);
+    }
+
+    public function eps(): BelongsTo
+    {
+        return $this->belongsTo(Eps::class);
     }
 } 

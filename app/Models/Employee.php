@@ -27,6 +27,7 @@ class Employee extends Model
         'position_id',
         'collaborator_type_id',
         'city_id',
+        'eps_id',
         'version',
         'created_by',
         'updated_by',
@@ -105,5 +106,10 @@ class Employee extends Model
     public function socialSecurity(): HasOne
     {
         return $this->hasOne(SocialSecurity::class);
+    }
+
+    public function eps(): BelongsTo
+    {
+        return $this->belongsTo(Eps::class);
     }
 } 

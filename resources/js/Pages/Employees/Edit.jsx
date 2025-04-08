@@ -10,7 +10,8 @@ export default function Edit({
     positions,
     collaboratorTypes,
     cities,
-    bloodTypes
+    bloodTypes,
+    epsList
 }) {
     return (
         <AuthenticatedLayout
@@ -29,6 +30,7 @@ export default function Edit({
                         collaboratorTypes={collaboratorTypes}
                         cities={cities}
                         bloodTypes={bloodTypes}
+                        epsList={epsList}
                         className="space-y-6"
                     />
                 </div>
