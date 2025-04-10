@@ -13,7 +13,7 @@ class City extends Model
 
     protected $fillable = [
         'name',
-        'department',
+        'department_id',
     ];
 
     public function employees(): HasMany
@@ -24,5 +24,10 @@ class City extends Model
     public function contactInformation(): HasMany
     {
         return $this->hasMany(ContactInformation::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 } 

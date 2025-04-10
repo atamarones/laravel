@@ -16,6 +16,7 @@ use App\Models\CivilStatus;
 use App\Models\Position;
 use App\Models\CollaboratorType;
 use App\Models\BloodType;
+use App\Models\Eps;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
@@ -32,9 +33,10 @@ class EmployeeSeeder extends Seeder
         $positionIds = Position::pluck('id')->toArray();
         $collaboratorTypeIds = CollaboratorType::pluck('id')->toArray();
         $bloodTypeIds = BloodType::pluck('id')->toArray();
+        $epsIds = Eps::pluck('id')->toArray();
 
         // Crear 10 empleados de ejemplo
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $employee = Employee::create([
                 'full_name' => $faker->name,
                 'identification_number' => $faker->unique()->numerify('##########'),
@@ -48,6 +50,8 @@ class EmployeeSeeder extends Seeder
                 'position_id' => $faker->randomElement($positionIds),
                 'collaborator_type_id' => $faker->randomElement($collaboratorTypeIds),
                 'city_id' => $faker->randomElement($cityIds),
+                'eps_id' => $faker->randomElement($epsIds),
+                'blood_type_id' => $faker->randomElement($bloodTypeIds),
                 'version' => 1,
                 'created_by' => 1,
             ]);
@@ -65,11 +69,9 @@ class EmployeeSeeder extends Seeder
             // Crear información de seguridad social
             EmployeeSocialSecurity::create([
                 'employee_id' => $employee->id,
-                'eps' => $faker->company,
                 'pension_fund' => $faker->company,
                 'arl' => $faker->company,
                 'compensation_fund' => $faker->company,
-                'blood_type_id' => $faker->randomElement($bloodTypeIds),
                 'version' => 1,
                 'created_by' => 1,
             ]);

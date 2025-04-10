@@ -15,16 +15,20 @@ return new class extends Migration
             $table->string('identification_number')->unique();
             $table->dateTime('birth_date');
             $table->string('birth_place');
-            $table->foreignId('gender_id')->constrained();
-            $table->foreignId('civil_status_id')->constrained();
             $table->decimal('height', 5, 2);
             $table->decimal('weight', 5, 2);
             $table->dateTime('start_date');
             $table->date('end_date')->nullable();
+            $table->foreignId('gender_id')->constrained();
+            $table->foreignId('civil_status_id')->constrained();
             $table->foreignId('termination_reason_id')->nullable()->constrained();
             $table->foreignId('position_id')->constrained();
             $table->foreignId('collaborator_type_id')->constrained();
             $table->foreignId('city_id')->constrained();
+            $table->foreignId('eps_id')->constrained();
+            $table->foreignId('blood_type_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->string('photo')->nullable();
             $table->string('version')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
@@ -59,11 +63,9 @@ return new class extends Migration
         Schema::create('employee_social_security', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->string('eps');
             $table->string('pension_fund');
             $table->string('arl');
             $table->string('compensation_fund');
-            $table->foreignId('blood_type_id')->constrained();
             $table->string('version')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

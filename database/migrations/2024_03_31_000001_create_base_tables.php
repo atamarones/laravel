@@ -39,10 +39,9 @@ return new class extends Migration
             $table->index('name');
         });
 
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('department', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('department');
             $table->string('version')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
@@ -52,8 +51,27 @@ return new class extends Migration
             
             // Índices
             $table->index('name');
-            $table->index('department');
-            $table->unique(['name', 'department']);
+            $table->unique(['name']);
+        });
+
+        Schema::create('cities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('department_id'); // Cambiado a unsignedBigInteger
+            $table->foreign('department_id')
+                ->references('id')
+                ->on('department')
+                ->onDelete('cascade');
+            $table->string('version')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->string('deleted_by')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            
+            // Índices
+            $table->index('name');
+            $table->unique(['name', 'department_id']);
         });
 
         Schema::create('genders', function (Blueprint $table) {
@@ -132,7 +150,7 @@ return new class extends Migration
             $table->index('regime');
         });
 
-        Schema::create('cie10s', function (Blueprint $table) {
+        Schema::create('cie10', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
             $table->string('description');
@@ -146,36 +164,20 @@ return new class extends Migration
             $table->fulltext(['description']); // Índice fulltext para búsqueda en descripción
         });
 
-        Schema::create('employees', function (Blueprint $table) {
-            $table->id();
-            $table->string('identification_number')->unique();
-            $table->string('full_name');
-            $table->foreignId('gender_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('civil_status_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('collaborator_type_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('position_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('eps_id')->nullable()->constrained('eps')->nullOnDelete();
-            $table->timestamps();
-            $table->softDeletes();
-
-            // Índices para optimizar búsquedas
-            $table->index('identification_number');
-            $table->index('full_name');
-            $table->fulltext('full_name'); // Índice fulltext para búsquedas más eficientes en nombres
-        });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('positions');
         Schema::dropIfExists('collaborator_types');
+        Schema::dropIfExists('department');
         Schema::dropIfExists('cities');
         Schema::dropIfExists('genders');
         Schema::dropIfExists('civil_statuses');
         Schema::dropIfExists('blood_types');
         Schema::dropIfExists('termination_reasons');
         Schema::dropIfExists('eps');
-        Schema::dropIfExists('cie10s');
+        Schema::dropIfExists('cie10');
         Schema::dropIfExists('employees');
     }
 }; 

@@ -21,10 +21,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,          // Usuarios del sistema
             EpsSeeder::class,           // EPS del sistema
             Cie10Seeder::class,         // Códigos CIE-10
-            CitySeeder::class,          // Ciudades
-            PositionSeeder::class,      // Cargos
+            DepartmentSeeder::class,    // Departamentos de Colombia
+            CitySeeder::class,          // Ciudades de Colombia
             CollaboratorTypeSeeder::class, // Tipos de colaborador
+            AccidentTypesTableSeeder::class, // Accident Types
             EmployeeSeeder::class,      // Empleados de ejemplo
+          
         ]);
     }
 }

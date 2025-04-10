@@ -21,7 +21,8 @@ class BaseDataSeeder extends Seeder
         // Géneros
         Gender::create(['name' => 'Masculino']);
         Gender::create(['name' => 'Femenino']);
-        Gender::create(['name' => 'Otro']);
+        Gender::create(['name' => 'No binario']);
+        Gender::create(['name' => 'Prefiero no decirlo']);
 
         // Estados Civiles
         CivilStatus::create(['name' => 'Soltero(a)']);
@@ -49,9 +50,23 @@ class BaseDataSeeder extends Seeder
 
         // Cargos
         Position::create(['name' => 'Administrador']);
-        Position::create(['name' => 'Supervisor']);
-        Position::create(['name' => 'Operario']);
-        Position::create(['name' => 'Auxiliar']);
+        Position::create(['name' => 'Gerente General']);
+        Position::create(['name' => 'Gerente de Recursos Humanos']);
+        Position::create(['name' => 'Gerente Financiero']);
+        Position::create(['name' => 'Gerente de Operaciones']);
+        Position::create(['name' => 'Gerente de Ventas']);
+        Position::create(['name' => 'Supervisor de Producción']);
+        Position::create(['name' => 'Supervisor de Calidad']);
+        Position::create(['name' => 'Supervisor de Mantenimiento']);
+        Position::create(['name' => 'Operario de Producción']);
+        Position::create(['name' => 'Operario de Calidad']);
+        Position::create(['name' => 'Operario de Mantenimiento']);
+        Position::create(['name' => 'Auxiliar Administrativo']);
+        Position::create(['name' => 'Auxiliar Contable']);
+        Position::create(['name' => 'Auxiliar de Recursos Humanos']);
+        Position::create(['name' => 'Recepcionista']);
+        Position::create(['name' => 'Mensajero']);
+        Position::create(['name' => 'Servicios Generales']);
 
         // Tipos de Colaborador
         CollaboratorType::create([

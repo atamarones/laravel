@@ -14,11 +14,9 @@ class EmployeeSocialSecurity extends Model
 
     protected $fillable = [
         'employee_id',
-        'eps',
         'pension_fund',
         'arl',
         'compensation_fund',
-        'blood_type_id',
         'version',
         'created_by',
         'updated_by',
@@ -28,10 +26,5 @@ class EmployeeSocialSecurity extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
-    }
-
-    public function bloodType()
-    {
-        return $this->belongsTo(BloodType::class);
     }
 } 
